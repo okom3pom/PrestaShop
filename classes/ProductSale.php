@@ -97,6 +97,12 @@ class ProductSaleCore
             $orderWay = 'DESC';
         }
 
+        if ($orderWay === 'random') {
+            $orderWay = 'RAND()';
+            $orderBy = '';
+            $orderTable = '';
+        }
+
         $interval = Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20;
 
         // no group by needed : there's only one attribute with default_on=1 for a given id_product + shop
@@ -143,9 +149,8 @@ class ProductSaleCore
         }
 
         if ($finalOrderBy != 'price') {
-            $sql .= '
-					ORDER BY ' . (!empty($orderTable) ? '`' . pSQL($orderTable) . '`.' : '') . '`' . pSQL($orderBy) . '` ' . pSQL($orderWay) . '
-					LIMIT ' . (int) (($pageNumber - 1) * $nbProducts) . ', ' . (int) $nbProducts;
+            $sql .= ' ORDER BY ' . (!empty($orderTable) ? '`' . pSQL($orderTable) . '`' : '') . ' ' . (!empty($orderBy) ? '`' . pSQL($orderBy) . '`' : '') . ' ' . pSQL($orderWay) . '
+                LIMIT ' . (int) (($pageNumber - 1) * $nbProducts) . ', ' . (int) $nbProducts;
         }
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
