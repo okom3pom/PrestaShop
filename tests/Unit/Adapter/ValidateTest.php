@@ -51,5 +51,6 @@ class ValidateTest extends TestCase
         yield [1, 'asc'];
         yield [1, 'desc'];
         yield [1, 'random'];
+        yield [1, 'RANDOM'];
     }
 }

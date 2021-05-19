@@ -83,12 +83,12 @@ class ProductSaleCore
         $orderTable = '';
 
         $invalidOrderBy = !Validate::isOrderBy($orderBy);
-        if ($invalidOrderBy || null === $orderBy) {
+        if (($invalidOrderBy || null === $orderBy) && strtolower($orderWay) !== 'random') {
             $orderBy = 'quantity';
             $orderTable = 'ps';
         }
 
-        if ($orderBy == 'date_add' || $orderBy == 'date_upd') {
+        if (($orderBy == 'date_add' || $orderBy == 'date_upd') && strtolower($orderWay) !== 'random') {
             $orderTable = 'product_shop';
         }
 
@@ -97,10 +97,9 @@ class ProductSaleCore
             $orderWay = 'DESC';
         }
 
-        if ($orderWay === 'random') {
+        if (strtolower($orderWay) === 'random') {
             $orderWay = 'RAND()';
             $orderBy = '';
-            $orderTable = '';
         }
 
         $interval = Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20;
