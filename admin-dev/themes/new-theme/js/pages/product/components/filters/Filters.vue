@@ -25,11 +25,14 @@
 <template>
   <div class="combinations-filters">
     <label
-      for="caption-textarea"
       class="control-label"
-    >Filter by:</label>
+      v-if="filters.length"
+    >{{ $t('filters.label') }}</label>
 
-    <div class="combinations-filters-line">
+    <div
+      class="combinations-filters-line"
+      v-if="filters.length"
+    >
       <filter-dropdown
         :key="filter.id"
         v-for="filter in filters"
@@ -45,15 +48,15 @@
         class="btn btn-outline-secondary combinations-filters-clear"
         @click="clearAll"
       >
-        <i class="material-icons">close</i> Clear
-        {{ selectedFiltersNumber }} filters
+        <i class="material-icons">close</i>
+        {{ $tc('filters.clear', selectedFiltersNumber, { '%filtersNb%': selectedFiltersNumber }) }}
       </button>
     </div>
   </div>
 </template>
 
 <script>
-  import {getProductAttributeGroups} from '@pages/product/services/attribute-groups';
+
   import FilterDropdown from '@pages/product/components/filters/FilterDropdown';
   import ProductEventMap from '@pages/product/product-event-map';
 
@@ -63,13 +66,12 @@
     name: 'Filters',
     data() {
       return {
-        filters: [],
         selectedFilters: {},
       };
     },
     props: {
-      productId: {
-        type: Number,
+      filters: {
+        type: Array,
         required: true,
       },
       eventEmitter: {
@@ -90,19 +92,12 @@
       },
     },
     mounted() {
-      this.initFilters();
+      this.eventEmitter.on(CombinationEvents.clearFilters, () => this.clearAll());
     },
     methods: {
       /**
        * This methods is used to initialize product filters
        */
-      async initFilters() {
-        try {
-          this.filters = await getProductAttributeGroups(this.productId);
-        } catch (error) {
-          window.$.growl.error({message: error});
-        }
-      },
       addFilter(filter, parentId) {
         // If absent set new field with set method so that it's reactive
         if (!this.selectedFilters[parentId]) {

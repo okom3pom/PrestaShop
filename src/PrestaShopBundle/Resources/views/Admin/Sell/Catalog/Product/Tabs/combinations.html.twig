@@ -24,13 +24,8 @@
  *#}
 
 <div role="tabpanel" class="form-contenttab tab-pane container-fluid" id="combinations-tab">
-  <div id="combinations_filters" data-product-id="{{ productId }}"></div>
-
-  {{ render(controller('PrestaShopBundle:Admin\\Sell\\Catalog\\Product\\Combination:paginatedList', {
-    'productId': productId,
-  })) }}
-
-  <div id="combinations-stock-availability">
-    {#    @todo: render stock availability preferences here when extracted to a reusable component. check StockType.php#}
-  </div>
+  {#
+  # This fake tab is actually empty the real content is in
+  # src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/Combination/external_tab.html.twig
+  #}
 </div>
